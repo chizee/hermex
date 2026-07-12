@@ -16,6 +16,7 @@ struct SkillsView: View {
 
     var body: some View {
         content
+            .adaptiveReadableScrollContent(maxWidth: AdaptiveReadableContentWidth.secondaryDestination)
             .navigationTitle("Skills")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

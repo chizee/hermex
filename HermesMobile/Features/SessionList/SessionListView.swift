@@ -33,6 +33,7 @@ struct SessionListView: View {
     @State private var isSearchFocused = false
     @State private var searchChromeIsExpanded = false
     @State private var selectedProjectID: String?
+    @State private var sidebarScrollPosition: String?
     @State private var didCompleteInitialLoad = false
     @FocusState private var searchFieldIsFocused: Bool
     @AppStorage(SessionSidebarDisclosureSettings.profilesAreExpandedKey)
@@ -252,6 +253,7 @@ struct SessionListView: View {
                 }
             }
             .navigationSplitViewStyle(.balanced)
+            .id(navigationState.rootRevision)
         } else {
             NavigationStack {
                 sessionListSurface
@@ -319,20 +321,23 @@ struct SessionListView: View {
 
     @ViewBuilder
     private func utilityDestination(_ destination: SessionListUtilityDestination) -> some View {
-        switch destination {
-        case .settings(let scrollTo):
-            SettingsView(authManager: authManager, server: server, initialScrollTarget: scrollTo)
-        case .tasks:
-            TasksView(server: server, onAPIError: authManager.handleAPIError)
-        case .skills:
-            SkillsView(server: server, onAPIError: authManager.handleAPIError)
-        case .memory:
-            MemoryView(server: server, onAPIError: authManager.handleAPIError)
-        case .insights:
-            InsightsView(server: server, onAPIError: authManager.handleAPIError)
-        case .archived:
-            ArchivedSessionsView(server: server, onAPIError: authManager.handleAPIError)
+        Group {
+            switch destination {
+            case .settings(let scrollTo):
+                SettingsView(authManager: authManager, server: server, initialScrollTarget: scrollTo)
+            case .tasks:
+                TasksView(server: server, onAPIError: authManager.handleAPIError)
+            case .skills:
+                SkillsView(server: server, onAPIError: authManager.handleAPIError)
+            case .memory:
+                MemoryView(server: server, onAPIError: authManager.handleAPIError)
+            case .insights:
+                InsightsView(server: server, onAPIError: authManager.handleAPIError)
+            case .archived:
+                ArchivedSessionsView(server: server, onAPIError: authManager.handleAPIError)
+            }
         }
+        .adaptiveSecondaryNavigationTitle()
     }
 
     private var navigationDestinationBinding: Binding<SessionNavigationDestination?> {
@@ -408,6 +413,7 @@ struct SessionListView: View {
         // with the tightly-packed navigation rows.
         .environment(\.defaultMinListRowHeight, 0)
         .scrollContentBackground(.hidden)
+        .scrollPosition(id: $sidebarScrollPosition)
         .background(Color(.systemBackground))
         .scrollDismissesKeyboard(.interactively)
         // Disclosure subrows are real List rows; drive their fold from the List

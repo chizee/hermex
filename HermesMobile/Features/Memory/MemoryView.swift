@@ -15,6 +15,7 @@ struct MemoryView: View {
 
     var body: some View {
         content
+            .adaptiveReadableScrollContent(maxWidth: AdaptiveReadableContentWidth.secondaryDestination)
             .navigationTitle("Memory")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

@@ -19,6 +19,7 @@ struct GitWorkspaceView: View {
     var body: some View {
         NavigationStack {
             content
+                .adaptiveReadableScrollContent(maxWidth: AdaptiveReadableContentWidth.workspace)
                 .navigationTitle("Git")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
